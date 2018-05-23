@@ -1,0 +1,52 @@
+#include<iostream>
+#include<cmath>
+using namespace std;
+int main()
+{
+	int m,n,k,t[3000]={0},i,j,p,q,a[60][60]={0},d,b[3000]={0},bx[3000],by[3000],max,s;
+	cin>>d;
+	for(i=1;i<=d;i++)
+	{
+		cin>>m>>n>>k;
+		q=0;
+		for(j=1;j<=m;j++)
+			for(p=1;p<=n;p++)
+			{
+				cin>>a[j][p];
+				if(a[j][p]>0)
+				{
+					q++;
+					b[q]=a[j][p];
+					bx[q]=j;
+					by[q]=p;
+				}
+			}
+		for(j=1;j<=q;j++)
+			for(p=j+1;p<=q;p++)
+				if(b[j]<b[p])
+				{
+					max=b[j];
+					b[j]=b[p];
+					b[p]=max;
+					max=bx[j];
+					bx[j]=bx[p];
+					bx[p]=max;
+					max=by[j];
+					by[j]=by[p];
+					by[p]=max;
+				}
+		max=1;
+		t[0]=bx[0]=bx[1];
+		by[0]=by[1];
+		s=0;
+		while(1==1)
+		{
+			t[max]=t[max-1]+1+abs(bx[max]-bx[max-1])+abs(by[max]-by[max-1]);
+			if(t[max]+bx[max]>k||b[max]==0)break;
+			s+=b[max];
+			max++;
+		}
+		cout<<s<<endl;
+	}
+	return 0;
+}

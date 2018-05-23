@@ -1,0 +1,142 @@
+#include<iostream>
+#include<cmath>
+using namespace std;
+int x[20],y[20];
+int f2(int a1,int a2)
+{
+	int s;
+	s=abs((x[a1]-x[a2])*(y[a1]-y[a2]));
+	if(s>0)return s;
+	else if(y[a1]==y[a2])return abs(x[a1]-x[a2]);
+	else return abs(y[a1]-y[a2]);
+}
+int main()
+{
+	int i,j,k,m,n,s[20],a[20]={0},min,c[20],d[20],s1,r[20],r1[20][20],t,max,q,cp,rp;
+	while(1==1)
+	{
+		cin>>n;
+		if(n==0)return 0;
+		min=0;
+		for(i=1;i<=n;i++)
+		{
+			cin>>x[i]>>y[i];
+			a[i]=c[i]=r[i]=0;
+			for(j=1;j<=n;j++)
+				r1[i][j]=0;
+			s[i]=2000000;
+		}
+		for(i=1;i<=n;i++)
+			for(j=i+1;j<=n;j++)
+				if(x[i]>x[j]||((x[i]==x[j])&&(y[i]<y[j])))
+				{
+					k=x[i];
+					x[i]=x[j];
+					x[j]=k;
+					k=y[i];
+					y[i]=y[j];
+					y[j]=k;
+				}
+		for(i=1;i<=n;i++)
+		{
+			for(j=1;j<=n;j++)
+				if(i!=j&&f2(i,j)<=s[i])
+				{
+					if(f2(i,j)<s[i]||(f2(i,j)==s[i]&&x[i]!=x[j]&&y[i]!=y[j]))
+					{
+					    s[i]=f2(i,j);
+					    a[i]=j;
+					}
+				}
+			min+=s[i];
+			c[i]++;
+			r[a[i]]++;
+		}
+		for(i=1;i<=n;i++)
+			for(j=1;j<=n;j++)
+				if(j!=i&&j!=a[i]&&((x[j]-x[i])*(x[j]-x[a[i]])<=0)&&((y[j]-y[i])*(y[j]-y[a[i]])<=0))
+				{
+					r[j]++;
+					r1[i][j]++;
+				}
+		m=0;
+		while(m<=n)
+		{
+		    m++;
+			max=0;
+			i=1;
+			t=0;
+			for(j=1;j<=n;j++)
+				if(c[j]+r[j]>1&&c[j]>0&&c[a[j]]+r[a[j]]>1&&r[a[j]]>0&&s[j]>=max&&(x[j]!=x[a[j]]||y[j]!=y[a[j]]))
+				{
+					t=1;
+					for(k=1;k<=n;k++)
+						if(r[k]-r1[j][k]+a[k]<=0)t=0;
+					if(t==0)continue;
+					max=s[j];
+					i=j;
+				}
+			if(t==0)
+				for(j=1;j<=n;j++)
+				    if(c[j]+r[j]>1&&c[j]>0&&c[a[j]]+r[a[j]]>1&&r[a[j]]>0&&s[j]>max)
+					{
+					    t=1;
+					    for(k=1;k<=n;k++)
+						    if(r[k]-r1[j][k]+a[k]<=0)t=0;
+					    if(t==0)continue;
+					    max=s[j];
+					    i=j;
+					}
+			if(t==1)
+			{
+				c[i]--;
+				r[a[i]]--;
+				min-=max;
+				for(j=1;j<=n;j++)
+					if(r1[i][j]>0)r[j]--;
+			}
+		}
+		m=0;
+		while(m<=n)    
+		{    
+		    m++;
+			for(i=1;i<=n;i++)
+			{
+			    for(j=1;j<=n;j++)
+				    d[j]=0;
+			    t=1;
+			    while(r[i]>1&&c[i]+r[i]>2&&t==1)
+				{
+				    k=0;
+				    for(j=1;j<=n;j++)
+					    if(a[j]==i&&c[j]==1&&i!=j)
+						{
+						    k++;
+						    d[k]=j;
+						}
+				    t=0;
+				    s1=0;
+				    for(j=1;j<=k;j++)
+					    for(q=j+1;q<=k;q++)
+						if(s[d[j]]+s[d[q]]-f2(d[j],d[q])>s1&&a[d[j]]==i)
+						{
+							s1=s[d[j]]+s[d[q]]-f2(d[j],d[q]);
+							t=1;
+							cp=d[j];
+							rp=d[q];
+						}
+				    if(t==1)
+					{
+					    r[i]-=2;
+					    min-=s1;
+					    s[cp]=f2(cp,rp);
+					    a[cp]=rp;
+					    r[rp]++;
+					    c[rp]=0;
+					}
+				}
+			}
+		}
+		cout<<min<<endl;
+	}
+}

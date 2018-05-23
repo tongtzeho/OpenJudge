@@ -1,0 +1,73 @@
+#include<iostream>
+#include<cstring>
+#include<string>
+using namespace std;
+int main()
+{
+	int i,j,k,t,q,c[201],turn[201],chain[201][201],chainsum,n,a[201],temp[201][201],x[201],y[201];
+	char ch;
+	while(cin>>n&&n!=0)
+	{
+		chainsum=0;
+		for(i=1;i<=n;i++)
+		{
+			cin>>turn[i];
+			a[i]=0;
+		}
+		for(i=1;i<=n;i++)
+		{
+			if(a[i]==0)
+			{
+				a[i]=1;
+				j=turn[i];
+				chainsum++;
+				chain[chainsum][0]=1;
+				chain[chainsum][1]=i;
+				while(a[j]==0)
+				{
+					a[j]=1;
+					chain[chainsum][0]++;
+					chain[chainsum][chain[chainsum][0]]=j;
+					j=turn[j];
+				}
+			}
+		}
+		while(cin>>k)
+		{
+			if(k==0)break;
+			cin.get();
+			i=0;
+			while(cin.get(ch)&&ch!='\n')
+			{
+				i++;
+				c[i]=int(ch);
+			}
+			for(i+=1;i<=n;i++)
+				c[i]=32;
+			for(i=1;i<=chainsum;i++)
+			    for(j=1;j<=chain[i][0];j++)
+				    temp[i][j]=chain[i][j];
+			for(i=1;i<=chainsum;i++)
+				for(j=1;j<=chain[i][0];j++)
+				    for(q=1;q<=k%chain[i][0];q++)
+					    temp[i][j]=turn[temp[i][j]];
+
+			for(i=1;i<=chainsum;i++)
+				for(j=1;j<=chain[i][0];j++)
+				{
+					x[temp[i][j]]=i;
+					y[temp[i][j]]=j;
+				}
+			for(i=1;i<=n;i++)
+				a[i]=chain[x[i]][y[i]];
+			t=n+1;
+			while(c[a[t-1]]==32)
+				t--;
+			for(i=1;i<t;i++)
+				cout<<char(c[a[i]]);
+			cout<<endl;
+		}
+		cout<<endl;
+	}
+	return 0;
+}

@@ -2,13 +2,13 @@
 using namespace std;
 int main()
 {
-	int i,s,n;
+	int n,i,a;
 	cin>>n;
-	s=2;
 	for(i=1;i<=n;i++)
 	{
-		cout<<s+1<<endl;
-		s*=s;
+		cin>>a;
+		if(a%2==1)cout<<"0 0"<<endl;
+		else cout<<(a+2)/4<<' '<<a/2<<endl;
 	}
 	return 0;
 }

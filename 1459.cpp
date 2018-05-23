@@ -6,11 +6,9 @@
 #include <queue>
 #include <vector>
 #include <algorithm>
-#include <iostream>
 
-#define N (25)
-#define M (N*N*2+100)
-#define inf 100000
+#define N (100+5)
+#define M (N*N+2)
 
 typedef long long LL;
 
@@ -137,50 +135,66 @@ int upstream(int s, int n) {
 }
 
 int main() {
-	int testcase;
-	int m, n, s, t;
-	s = 22;
-	t = 23;
-	cin >> testcase;
-	while (testcase > 0)
+	
+	int n, np, nc, m;
+	int capacity[103][103];
+	while (scanf("%d %d %d %d", &n, &np, &nc, &m) != EOF)
 	{
-		testcase--;
-		cin >> m >> n;
+		int i, j;
 		dinic_init();
-		int i, j, k;
-		add_edge(n, t, inf, 0);
+		for (i = 0; i < n; i++)
+			for (j = 0; j < n; j++)
+			{
+				capacity[i][j] = 0;
+			}
 		for (i = 0; i < m; i++)
 		{
-			string str;
-			cin >> str >> k;
-			if (str == "I")
+			int x, y, c;
+			char str[2000];
+			scanf("%s", str);
+			for (j = 0; j < strlen(str); j++)
+				if (str[j] == ',' || str[j] == '(' || str[j] == ')') str[j] = ' ';
+			sscanf(str, "%d %d %d", &x, &y, &c);
+			capacity[x][y] = c;
+		}
+		for (i = 0; i < n; i++)
+			for (j = i+1; j < n; j++)
 			{
-				add_edge(s, i, inf, 0);
+				if (capacity[i][j]+capacity[j][i] > 0)
+				{
+					add_edge(i, j, capacity[i][j], capacity[j][i]);
+				}
 			}
-			for (j = 0; j < k; j++)
-			{
-				int x;
-				cin >> x;
-				add_edge(i, x, inf, 1);
-			}
-		}
-		int answer = dinic(s, t);
-		if (answer < inf)
+		for (i = 0; i < np; i++)
 		{
-			cout << answer << endl;
+			int x, c;
+			char str[2000];
+			scanf("%s", str);
+			for (j = 0; j < strlen(str); j++)
+				if (str[j] == ',' || str[j] == '(' || str[j] == ')') str[j] = ' ';
+			sscanf(str, "%d %d", &x, &c);
+			add_edge(102, x, c, 0);
 		}
-		else
+		for (i = 0; i < nc; i++)
 		{
-			cout << "PANIC ROOM BREACH" << endl;
+			int x, c;
+			char str[2000];
+			scanf("%s", str);
+			for (j = 0; j < strlen(str); j++)
+				if (str[j] == ',' || str[j] == '(' || str[j] == ')') str[j] = ' ';
+			sscanf(str, "%d %d", &x, &c);
+			add_edge(x, 103, c, 0);
 		}
+		int ans = dinic(102, 103);
+		printf("%d\n", ans);
 	}
 	return 0;
 	
- /* int m, n, s, t;
+	/*
+  int m, n, s, t;
   int pig[M+1], pre[M+1];
   bool con[N+1];
   FILE *fin;
-
   fin = stdin;
 
   fscanf(fin, "%d %d", &m, &n);
